@@ -1,0 +1,398 @@
+studentlist={}
+studentlistfile=open('studentlist.txt','r+')
+
+
+with open('studentlist.txt') as f:
+    studentdetailstr = f.read().splitlines()
+
+for line in studentdetailstr:
+    studentdetails=eval(line)
+    name=studentdetails['Name']
+    studentlist[name]=studentdetails
+
+
+def Addstudent_info(studentname):
+    studentlistfilefn = open('studentlist.txt', 'w')
+
+    valid = False
+    while not valid:
+        ID = (input('Enter ID Number:'))
+        if ID.isnumeric():
+            ID = int(ID)
+            valid = True
+        else:
+            print('Please enter a number.')
+            ID = (input('Enter ID Number:'))
+
+    studentlist[studentname]=({'Name': studentname, 'ID': ID})
+    yearno = input('Enter Year Number:')
+    year = str('Year ' + yearno)
+
+    studentfallsubs = []
+
+    valid = False
+    while not valid:
+        studentFSsubnum = (input('How many subjects in Fall?:'))
+        if studentFSsubnum.isnumeric():
+            studentFSsubnum=int(studentFSsubnum)
+            valid = True
+        else:
+            print('Please enter a number.')
+            studentFSsubnum = (input('How many subjects in Fall?:'))
+
+    while len(studentfallsubs) < studentFSsubnum:
+        sub = input('Enter Subject Code:')
+
+        valid = False
+        while not valid:
+            if checkprereqs(sub, studentname) == False:
+                sub = input('Enter Subject Code:')
+            else:
+                valid = True
+
+        if sub in studentfallsubs:
+            print('You already took this subject')
+
+        else:
+            studentfallsubs.append(sub)
+
+    studentspringsubs = []
+
+    valid = False
+    while not valid:
+        studentSSsubnum = (input('How many subjects in Spring?:'))
+        if studentSSsubnum.isnumeric():
+            studentSSsubnum = int(studentSSsubnum)
+            valid = True
+        else:
+            print('Please enter a number.')
+            studentSSsubnum = (input('How many subjects in Spring?:'))
+
+    while len(studentspringsubs) < studentSSsubnum:
+        sub = input('Enter Subject Code:')
+
+        valid = False
+        while not valid:
+            if checkprereqs(sub, studentname) == False:
+                sub = input('Enter Subject Code:')
+            else:
+                valid = True
+
+        if sub in studentspringsubs:
+            print('You already took this subject.')
+
+        else:
+            studentspringsubs.append(sub)
+
+    studentsummersubs = []
+
+    valid = False
+    while not valid:
+        studentSumSsubnum = (input('How many subjects in Summer?:'))
+        if studentSumSsubnum.isnumeric():
+            studentSumSsubnum = int(studentSumSsubnum)
+            valid = True
+        else:
+            print('Please enter a number.')
+            studentSumSsubnum = (input('How many subjects in Summer?:'))
+
+    while len(studentsummersubs) < studentSumSsubnum:
+        sub = input('Enter Subject Code:')
+
+        valid = False
+        while not valid:
+            if checkprereqs(sub, studentname) == False:
+                sub = input('Enter Subject Code:')
+            else:
+                valid = True
+
+        if sub in studentsummersubs:
+            print('You already took this subject')
+
+        else:
+            studentsummersubs.append(sub)
+
+    studentlist[studentname][year] = {'Fall': studentfallsubs, 'Spring': studentspringsubs, 'Summer': studentsummersubs}
+
+    for name in studentlist:
+        studentlistfilefn.write(str(studentlist[name]) +'\n')
+
+    studentlistfilefn.close()
+
+
+def checkprereqs(subcode,name):
+    with open('prerequisites.txt') as f:
+        mylist = f.read().splitlines()
+
+    prerequisites = {}
+
+    for line in mylist:
+        if len(line) == 0:
+            continue
+        else:
+            sub = line.split(':')[0]
+            prereqs = eval(line.split(':')[1])
+            prerequisites[sub] = prereqs
+
+    if subcode in prerequisites:
+        for prereq in prerequisites[subcode]:
+            if prereq in str(studentlist[name]):
+                continue
+            else:
+                print(prereq, 'has not yet been complete.')
+                return False
+    else:
+        print('Incorrect Subject Code.')
+        return False
+
+def addCourses(studentname):
+    studentlistfilefn = open('studentlist.txt', 'w')
+
+    yearno = input('Enter Year Number:')
+    year = str('Year ' + yearno)
+
+    studentfallsubs = []
+
+    valid = False
+    while not valid:
+        studentFSsubnum = (input('How many subjects in Fall?:'))
+        if studentFSsubnum.isnumeric():
+            studentFSsubnum = int(studentFSsubnum)
+            valid = True
+        else:
+            print('Please enter a number.')
+            studentFSsubnum = (input('How many subjects in Fall?:'))
+    while len(studentfallsubs) < studentFSsubnum:
+        sub = input('Enter Subject Code:')
+
+        valid = False
+        while not valid:
+            if checkprereqs(sub, studentname) == False:
+                sub = input('Enter Subject Code:')
+            else:
+                valid = True
+
+        if sub in studentfallsubs:
+            print('You already took this subject')
+
+        else:
+            studentfallsubs.append(sub)
+
+    studentspringsubs = []
+
+    valid = False
+    while not valid:
+        studentSSsubnum = (input('How many subjects in Spring?:'))
+        if studentSSsubnum.isnumeric():
+            studentSSsubnum = int(studentSSsubnum)
+            valid = True
+        else:
+            print('Please enter a number.')
+            studentSSsubnum = (input('How many subjects in Spring?:'))
+    while len(studentspringsubs) < studentSSsubnum:
+        sub = input('Enter Subject Code:')
+
+        valid = False
+        while not valid:
+            if checkprereqs(sub, studentname) == False:
+                sub = input('Enter Subject Code:')
+            else:
+                valid = True
+
+        if sub in studentspringsubs:
+            print('You already took this subject.')
+
+        else:
+            studentspringsubs.append(sub)
+
+    studentsummersubs = []
+
+    valid = False
+    while not valid:
+        studentSumSsubnum = (input('How many subjects in Summer?:'))
+        if studentSumSsubnum.isnumeric():
+            studentSumSsubnum = int(studentSumSsubnum)
+            valid = True
+        else:
+            print('Please enter a number.')
+            studentSumSsubnum = (input('How many subjects in Fall?:'))
+
+    while len(studentsummersubs) < studentSumSsubnum:
+        sub = input('Enter Subject Code:')
+
+        valid = False
+        while not valid:
+            if checkprereqs(sub, studentname) == False:
+                sub = input('Enter Subject Code:')
+            else:
+                valid = True
+
+        if sub in studentsummersubs:
+            print('You already took this subject')
+
+        else:
+            studentsummersubs.append(sub)
+
+    studentlist[studentname][year] = {'Fall': studentfallsubs, 'Spring': studentspringsubs, 'Summer': studentsummersubs}
+
+    for name in studentlist:
+        studentlistfilefn.write(str(studentlist[name])+'\n')
+
+    studentlistfilefn.close()
+
+
+def repCourses(name):
+    student = studentlist[name]
+    courses_taken = []
+    courses_repeated = []
+    for year in student:
+        if year.startswith('Year'):
+            for semester in student[year]:
+                courses_taken += student[year][semester]
+
+    for course in courses_taken:
+        if courses_taken.count(course)>1 and course not in courses_repeated:
+            courses_repeated.append(course)
+
+    print(courses_repeated)
+
+def coursesLeft(name):
+    with open('prerequisites.txt') as f:
+        mylist = f.read().splitlines()
+
+    prerequisites = {}
+
+    for line in mylist:
+        if len(line) == 0:
+            continue
+        else:
+            sub = line.split(':')[0]
+            prereqs = eval(line.split(':')[1])
+            prerequisites[sub] = prereqs
+
+
+    student = studentlist[name]
+    courses_taken = []
+    courses_left = []
+    for year in student:
+        if year.startswith('Year'):
+            for semester in student[year]:
+                courses_taken += student[year][semester]
+
+    for course in prerequisites:
+        if course not in courses_taken:
+            courses_left.append(course)
+
+    print(courses_left)
+
+def StudentListFns(FunctionInput):
+
+    if FunctionInput == 1:
+        name = input('Enter Student Name:')
+        Addstudent_info(name)
+
+    elif FunctionInput == 2:
+        name = input('Enter Student Name:')
+        newname=name
+
+        valid=False
+
+        while not valid:
+            if name in studentlist:
+                addCourses(name)
+                valid=True
+            else:
+                print('Student not in database.(Type "Add" to add student)')
+                name = input('Enter Student Name:')
+                if name == 'Add':
+
+                    Addstudent_info(newname)
+                    valid=True
+
+
+    elif FunctionInput==3:
+        name=input('Enter Student Name:')
+        valid = False
+
+        while not valid:
+            if name in studentlist:
+                valid = True
+            else:
+                print('Student not in database.')
+                name = input('Enter Student Name:')
+
+        del studentlist[name]
+
+    elif FunctionInput == 4:
+        name = input('Enter Student Name:')
+        valid = False
+
+        while not valid:
+            if name in studentlist:
+                valid = True
+            else:
+                print('Student not in database.')
+                name = input('Enter Student Name:')
+
+        coursesLeft(name)
+
+    elif FunctionInput == 5:
+        name = input('Enter Student Name:')
+        valid = False
+
+        while not valid:
+            if name in studentlist:
+                valid = True
+            else:
+                print('Student not in database.')
+                name = input('Enter Student Name:')
+
+        repCourses(name)
+
+    elif FunctionInput == 6:
+        if len(studentlist)==0:
+            print('No students in database.')
+        else:
+            print(studentlist)
+
+    else:
+        print("Error")
+
+    choiceagain = input("Would you like to do another Function?(Function Number/n)")
+
+    if choiceagain == 'n':
+        print('Thank you for using.')
+
+    else:
+        valid = False
+        while not valid:
+            if choiceagain.isnumeric() and (int(choiceagain) > 0 and int(choiceagain) <= 6):
+                StudentListFns(int(choiceagain))
+                valid = True
+            else:
+                print('Please enter a number between 1 and 2')
+                choiceagain = (input('Choose a function number:'))
+
+
+
+print('Following is a list of functions')
+print('1. Add a new student.')
+print("2. Add to a student's courses.")
+print("3. Delete a student's records")
+print('4. Check Courses left for a Student')
+print("5. Check Student's Repeated Courses")
+print("6. Display list of students")
+
+
+valid=False
+while not valid:
+    FNinput = (input('Choose a function number:'))
+    if FNinput.isnumeric() and (int(FNinput) >0 and int(FNinput)<=9):
+        StudentListFns(int(FNinput))
+        valid=True
+    else:
+        print('Please enter a number between 1 and 9')
+        FNinput = (input('Choose a function number:'))
+
+
+studentlistfile.close()
